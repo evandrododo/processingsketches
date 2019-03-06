@@ -30,7 +30,6 @@ Kinect kinect;
 OpenCV opencv;
 
 PGraphics fbo;
-PGraphics fader;
 
 ArrayList<Contour> contornos;
 PImage kinectDepth;
@@ -49,11 +48,11 @@ public void setup() {
   kinect.initDepth();
   kinect.enableMirror(true);
   kinect.initVideo();
+  kinect.setTilt(0);
   kinectDepth = createImage(kinect.width, kinect.height, RGB);
   
   opencv = new OpenCV(this, kinectDepth);
   fbo = createGraphics(kinect.width, kinect.height, P2D);
-  fader = createGraphics(kinect.width, kinect.height, P2D);
 }
 
 public void draw() {
@@ -71,7 +70,7 @@ public void draw() {
 
   // Desenha contornos do kinect
   updateContornos();
-  image(fbo, 356, 0, (width/16) * 12, (height/9) * 9);
+  image(fbo, 356, 0, 1440, 1080);
 
   // Desenha camera RGB original
   PImage img = kinect.getVideoImage();
@@ -84,11 +83,11 @@ public void draw() {
 public void updateContornos() {
   contornos = opencv.findContours();
 
-  fbo.beginDraw();
   fbo.smooth(4);
+  fbo.beginDraw();
   fbo.noStroke();
   fbo.fill(0,0,0,10);
-  fbo.rect(0,0, fbo.width, fbo.height);
+  fbo.rect(0,0, fbo.width, fbo.height); //fade migué
   fbo.stroke(0, 255, 255, 100);
   fbo.noFill();
   for (Contour contour : contornos) {
