@@ -6,7 +6,7 @@ public class Emitter extends Point {
 
   public Emitter(int x0, int y0) {
     super(x0, y0);
-    angle = 45;
+    angle = -45;
     particles = new ArrayList<Particle>();
     tempoInicio = millis();
   }
@@ -31,7 +31,7 @@ public class Emitter extends Point {
     return (millis() - tempoInicio)/1000;
   }
   public void createParticle() {
-    if(particles.size() < segundosDecorridos()) {
+    if(particles.size() < segundosDecorridos() && particles.size() < 3) {
       PVector f = new PVector( cos(radians(angle)) / 10, sin(radians(angle)) / 10);
       particles.add(new Particle(x,y).setForce(f));
     }
@@ -40,7 +40,7 @@ public class Emitter extends Point {
   public void drawParticles() {
     if( debug ) {
       strokeWeight(1);
-      stroke(0,255,0);
+      stroke(corPrimaria);
       line(x,y, x + cos(radians(angle))*10, y + sin(radians(angle))*10);
     }
 
