@@ -3,34 +3,42 @@ import g4p_controls.*;
 Controles controles;
 
 
-int brilhoKinect = 0;
-float contrasteKinect = 1;
+int brilhoKinect = -130;
+float contrasteKinect = 1.5;
 int anguloTilt = 0;
 int quantidadeMassaPresenca = 1500;
 
-int distanciaMin = 15;
-int distanciaMax = 20;
-int quantidadeMaxNos = 22;
-int anguloVariacao = 90;
+int distanciaMin = 7;
+int distanciaMax = 8;
+int quantidadeMaxNos = 32;
+int anguloVariacao = 80;
 float velocidadeCriacao = 3;
 
 PGraphics particulasFrame;
   
 boolean debug = false;
-boolean drawParticulasEnabled = false;
+boolean drawParticulasEnabled = true;
+
+boolean isStandby = true;
 
 color corPrimaria = color(0,255,255);
+color corTemporaria = color(0,0,0);
 
 KinectControl kinectControl;
-Root r;
+Root r, r2, r3;
 
 // Eventos
 int tInicioBrisa, tDuracaoBrisa;
+int tInicioStandby, tDuracaoStandby;
 int qtdBrisasPassadas;
 
-int tDuracaoMaximaBrisa = 15;
-int tInicioRaizes = 2;
-PVector posInicioRaiz = new PVector(960, 800);
+int tDuracaoMaximaBrisa = 193;
+int tDuracaoMinimaStandby = 5;
+int tInicioRaizes = 20;
+PVector posInicioRaiz = new PVector(960, 200);
+
+PImage luzplanta;
+Movie arterias;
 
 public void settings() {
   fullScreen(P3D);
@@ -42,26 +50,45 @@ public void setup() {
   kinectControl = new KinectControl();
   kinectControl.setup(this);
   
-  r = new Root(int(posInicioRaiz.x), int(posInicioRaiz.y), 0);
+  particulasFrame = createGraphics(width, height, P3D);
+  r = new Root(int(posInicioRaiz.x), int(posInicioRaiz.y), 0, 1);
+  r2 = new Root(int(posInicioRaiz.x), int(posInicioRaiz.y), 0, 2);
+  r3 = new Root(int(posInicioRaiz.x), int(posInicioRaiz.y), 0, 3);
+
+  startStandby();
+
+  luzplanta = loadImage("luz.png");
+  
+  arterias = new Movie(this, "arterias.mp4");
 }
 
 void startRaizes() {
   r.ativaRaiz();
+  r2.ativaRaiz();
+  r3.ativaRaiz();
 }
 
 void restartBrisa() {
+  arterias.stop();
   tInicioBrisa = millis();
+  tDuracaoBrisa = 0;
   qtdBrisasPassadas++;
   println("Restart pela "+qtdBrisasPassadas+"ª vez");
 
   particulasFrame = createGraphics(width, height, P3D);
   r.restart(int(posInicioRaiz.x), int(posInicioRaiz.y));
+  r2.restart(int(posInicioRaiz.x), int(posInicioRaiz.y));
+  r3.restart(int(posInicioRaiz.x), int(posInicioRaiz.y));
+  arterias.play();
 }
 
 public void update() {
-  tDuracaoBrisa = millis() - tInicioBrisa;
+  if (!isStandby) {
+    tDuracaoBrisa = millis() - tInicioBrisa;
+  }
   if (tDuracaoBrisa > tDuracaoMaximaBrisa*1000) {
-    restartBrisa();
+    startStandby();
+    //restartBrisa();
   }
   if( tDuracaoBrisa > tInicioRaizes*1000) {
     startRaizes();
@@ -72,20 +99,95 @@ public void draw() {
   this.update();
   background(0);
   noStroke();
-  // noLights();
-  // popMatrix();
-  // pointLight(255, 102, 0, 960, 800, 300);
-  // translate(960, 800, 0);
-  // sphere(200);  
-  // pushMatrix();
 
+  if( isStandby ) {
+    tint(0,0,0,100);
+  }
+
+  kinectControl.update();
+
+  updateStandBy();
+  if( isStandby ) {
+    drawStandby();
+    return;
+  }
+
+  noTint();
   r.drawRaiz();
+  r2.drawRaiz();
+  r3.drawRaiz();
+
   if(drawParticulasEnabled) {
     particulasFrame.beginDraw();
-    particulasFrame.fill(0, 0, 0, 10);
+    particulasFrame.fill(0, 0, 0, (sin(radians(millis()/100))+1)*10 );
     particulasFrame.noStroke();
     particulasFrame.rect(0,0, width, height);
     particulasFrame.endDraw();
+
+    blendMode(ADD);
+    image(particulasFrame, 0, 0);
+    blendMode(BLEND);
   }
-  kinectControl.update();
+}
+
+void startStandby() {
+  println("Inicio standby");
+  isStandby = true;
+  tInicioStandby = millis();
+  tDuracaoStandby = 0;
+  tDuracaoBrisa = 0;
+  tInicioFade = 0;
+  iAlphaStandby = 100;
+}
+
+int tempoFade = 2;
+int tInicioFade, iAlphaStandby;
+
+void updateStandBy(){
+  if (isStandby) {
+    tDuracaoStandby = millis() - tInicioStandby;
+    // pulsa
+    iAlphaStandby = int((sin(radians(millis()/10))+1)*50);
+
+    if( tDuracaoStandby > tDuracaoMinimaStandby*1000 ) {
+      if (kinectControl.tempoPresencaTemporaria > 10) {
+        fadeOutStandby();
+        if (millis() - tInicioFade > tempoFade*1000) {
+          isStandby = false;
+          restartBrisa();
+        }
+      }
+    }
+  }
+}
+
+void drawStandby() {
+  desenhaLuz();
+}
+
+void fadeOutStandby() {
+  if( tInicioFade == 0 ) {
+    tInicioFade = millis();
+  }
+  iAlphaStandby = int(map(millis(), tInicioFade, tInicioFade+tempoFade*1000, 100, 0));
+}
+
+void desenhaLuz() {
+  noStroke();
+  pushMatrix();
+  colorMode(HSB,100);
+  translate(posInicioRaiz.x, posInicioRaiz.y, 0);
+  tint(50, 50, 100, iAlphaStandby);
+  image(luzplanta, 0, 0);
+  colorMode(RGB,255);
+  popMatrix();
+}
+
+void movieEvent(Movie movie) {
+  movie.read();  
+}
+
+
+color lerpColor(color cor1, color cor2, int ilerp) {
+  return cor1;
 }

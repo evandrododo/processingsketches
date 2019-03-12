@@ -31,18 +31,18 @@ public class Emitter extends Point {
     return (millis() - tempoInicio)/1000;
   }
   public void createParticle() {
-    if(particles.size() < segundosDecorridos() && particles.size() < 3) {
+    if(particles.size() < segundosDecorridos()+2 && particles.size() < 1) {
       PVector f = new PVector( cos(radians(angle)) / 10, sin(radians(angle)) / 10);
       particles.add(new Particle(x,y).setForce(f));
     }
   }
 
   public void drawParticles() {
-    if( debug ) {
+    // if( debug ) {
       strokeWeight(1);
-      stroke(corPrimaria);
+      stroke(corTemporaria);
       line(x,y, x + cos(radians(angle))*10, y + sin(radians(angle))*10);
-    }
+    // }
 
     for (Particle p : particles) {
       p.draw();

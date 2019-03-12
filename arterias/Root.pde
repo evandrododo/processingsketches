@@ -5,10 +5,12 @@ public class Root {
   int profundidade = 0;
   int tCriacao;
   boolean ativo = false;
+  int iRaiz = 0;
 
   // Cria Raiz a partir de um ponto x,y
-  public Root(int xI, int yI, int p) {
+  public Root(int xI, int yI, int p, int iR) {
     pontos.add( new Emitter(xI, yI).setAngle(-45) );
+    iRaiz = iR;
     
     profundidade = p;
     tCriacao = millis();
@@ -23,6 +25,7 @@ public class Root {
     pontos.clear();
     filhas.clear();
     pontos.add( new Emitter(xI, yI).setAngle(-45) );
+    desativaRaiz();
 
     tCriacao = millis();
   }
@@ -32,7 +35,10 @@ public class Root {
   }
 
   public void ativaRaiz() {
-    ativo = true;
+    if( ativo == false ){
+      ativo = true;
+      tCriacao = millis();
+    }
   }
 
   int getDirecaoRaiz(int indexPonto) {
@@ -75,14 +81,43 @@ public class Root {
     int xNovoPonto = xCriacao + ultimoPonto.x;
     int yNovoPonto = yCriacao + ultimoPonto.y;
     
-
     float destinoX = int(kinectControl.centroMassa.x/640 * 1440);
     float destinoY = int(kinectControl.centroMassa.y/480 * 1080);
+    if( profundidade == 0 && iRaiz == 1){
+      destinoX = 1900;
+      destinoY = 0;
+    }
+    if( profundidade == 0 && iRaiz == 2){
+      destinoX = 0;
+      destinoY = 0;
+    }
+    if( profundidade == 0 && iRaiz == 3){
+      destinoY = -30;
+      destinoX = width/2;
+    }
+    if( profundidade == 1 ) {
+      if( iRaiz == 1){
+        destinoX = 1900;
+        destinoY = 900;
+      }
+      if( iRaiz == 2){
+        destinoX = 0;
+        destinoY = 900;
+      }
+      if( iRaiz == 3){
+        destinoY = -100;
+      }
+    } 
 
     float distanciaDestino = dist(xNovoPonto, yNovoPonto, destinoX, destinoY);
     PVector forcaAtracao = new PVector(destinoX - xNovoPonto, destinoY - yNovoPonto);
-    forcaAtracao.div(distanciaDestino);
-    forcaAtracao.mult(profundidade);
+    if( profundidade < 2 ){
+      forcaAtracao.div(sqrt(distanciaDestino)*(2+profundidade));
+      // forcaAtracao.mult();
+    } else {
+      forcaAtracao.div(distanciaDestino);
+      forcaAtracao.mult(sqrt(sqrt(distanciaDestino)));
+    }
 
     xNovoPonto += forcaAtracao.x;
     yNovoPonto += forcaAtracao.y;
@@ -98,18 +133,22 @@ public class Root {
       Point p = pontos.get(i);
       point(p.x, p.y);
     }
+    colorMode(RGB, 255);
     stroke(255);
   }
 
   void drawParticulas() {
     if(drawParticulasEnabled) {
       particulasFrame.beginDraw();
+      int limita = 0;
       for(Emitter e : pontos) {
-        e.update();
-        e.drawParticles();
+        if(limita % 15 == 7 && limita < pontos.size()-1) {
+          e.update();
+          e.drawParticles();
+        }
+        limita++;
       }
       particulasFrame.endDraw();
-      image(particulasFrame, 0, 0);
     }
   }
 
@@ -123,7 +162,14 @@ public class Root {
       }
       
       int qtdFilhas = filhas.size();
-      if (qtdNos > 10 && qtdFilhas < qtdNos/10) {    
+      int frequenciaFilhas = 10*profundidade;
+      int limiteMinimo = 10;
+      if(profundidade == 0) {
+        frequenciaFilhas = 3;
+        limiteMinimo = 2;
+      }
+
+      if (qtdNos > limiteMinimo && qtdFilhas < qtdNos/frequenciaFilhas) {    
         addFilha();
       }
     }
@@ -143,6 +189,15 @@ public class Root {
     Point p = pontos.get(0);
 
     stroke(corPrimaria);
+    corTemporaria = corPrimaria;
+    // Fade in no começo
+    if(tDuracaoBrisa < tInicioRaizes*1000 + 6000) {
+      int iCorInicio = int(map(tDuracaoBrisa, tInicioRaizes*1000, tInicioRaizes*1000+6000, 0, 100));
+      colorMode(HSB, 100);
+      corTemporaria = color(hue(corPrimaria), saturation(corPrimaria), iCorInicio);
+      stroke(corTemporaria);
+      colorMode(HSB, 100);
+    }
     vertex(p.x, p.y, 0);
     for (int i = 0; i < pontos.size()-1; i++) {
       p = pontos.get(i);
@@ -151,6 +206,7 @@ public class Root {
     curveVertex(p.x, p.y, 0);
 
     endShape();
+    colorMode(RGB, 255);
   }
 
   void drawRaiz() { 
@@ -168,7 +224,7 @@ public class Root {
   void addFilha() {
     if (profundidade > 4) return;
     Point ultimoPonto = pontos.get(pontos.size() - 1);
-    filhas.add(new Root(ultimoPonto.x, ultimoPonto.y,  profundidade+1));
+    filhas.add(new Root(ultimoPonto.x, ultimoPonto.y,  profundidade+1, iRaiz));
   }
 
   void drawFilhas() {

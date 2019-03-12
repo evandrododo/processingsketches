@@ -23,7 +23,7 @@ public class Particle {
 
 public void update() {
     tVida = millis() - tCreate;
-    PVector randForce = new PVector( random(-0.05, 0.05), random(-0.05, 0.05));
+    PVector randForce = new PVector( random(-0.02, 0.02), random(-0.04, 0.04));
     force.add(randForce);
     position.add(force);
 
@@ -32,7 +32,7 @@ public void update() {
     forcaPresenca.sub(position);
     //forcaPresenca.div(100);
     forcaPresenca.div((dist(position.x,position.y,centroMassa.x, centroMassa.y)));
-    //position.add(forcaPresenca);
+    position.add(forcaPresenca);
   }
 
   public void draw() {

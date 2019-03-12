@@ -65,7 +65,7 @@ public class Controles extends PApplet {
   }
 
   void restartRoot() {
-    r = new Root(width/2, 0, 0);
+    r = new Root(width/2, 0, 0, 1);
   }
 
   void handleSliderEvents(GValueControl slider, GEvent event) { 
