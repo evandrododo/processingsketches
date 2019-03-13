@@ -1,4 +1,6 @@
 import g4p_controls.*;
+
+import processing.sound.*;
  
 Controles controles;
 
@@ -10,7 +12,7 @@ int quantidadeMassaPresenca = 1500;
 
 int distanciaMin = 7;
 int distanciaMax = 8;
-int quantidadeMaxNos = 72;
+int quantidadeMaxNos = 60;
 int anguloVariacao = 80;
 float velocidadeCriacao = 4;
 
@@ -34,20 +36,22 @@ int qtdBrisasPassadas;
 
 int tDuracaoMaximaBrisa = 193;
 int tDuracaoMinimaStandby = 10;
-int tInicioRaizes = 20;
+int tInicioRaizes;
 int tInicioArterias = 40;
 PVector posInicioRaiz = new PVector(500, 100);
 
 PImage luzplanta;
 Movie arterias;
+SoundFile trilha;
 
 public void settings() {
-  size(1024,768,P3D);
+  fullscreen(P3D);
   controles = new Controles();
 }
 
 public void setup() {
   tInicioBrisa = millis();
+  tInicioRaizes = 20;
   kinectControl = new KinectControl();
   kinectControl.setup(this);
   
@@ -61,6 +65,7 @@ public void setup() {
   luzplanta = loadImage("luz.png");
   
 //  arterias = new Movie(this, "arterias.mp4");
+  trilha = new SoundFile(this, "trilha.wav");
   corTemporaria = corPrimaria;
 
 }
@@ -73,6 +78,7 @@ void startRaizes() {
 
 void restartBrisa() {
   //arterias.stop();
+  trilha.stop();
   tInicioBrisa = millis();
   tDuracaoBrisa = 0;
   qtdBrisasPassadas++;
@@ -83,6 +89,7 @@ void restartBrisa() {
   r2.restart(int(posInicioRaiz.x), int(posInicioRaiz.y));
   r3.restart(int(posInicioRaiz.x), int(posInicioRaiz.y));
   //arterias.play();
+  trilha.play();
 }
 
 public void update() {

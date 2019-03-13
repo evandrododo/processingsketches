@@ -8,7 +8,7 @@ public class KinectControl {
     final int FONTE_SENSOR = 1;
     final int FONTE_VIDEO = 2;
     Kinect kinect;
-    int fonteKinect = FONTE_SENSOR;
+    int fonteKinect = FONTE_VIDEO;
     int anguloKinect = 0;
     Movie videodemo;
     OpenCV opencv;
@@ -141,6 +141,8 @@ public class KinectControl {
             int iFade = int(map(tDuracaoBrisa, tInicioRastroContornos*1000, (tInicioRastroContornos+tDuracaoFadeRastroContornos)*1000, 255, 5));
             if (iFade < 5) iFade = 5;
             fbo.fill(0,0,0,iFade);//fade migué
+        } else if (tDuracaoBrisa < tInicioRaizes*1000 + 10000) {
+            fbo.fill(0,0,0, map(tDuracaoBrisa, 0, tInicioRaizes*1000+10000, 0, 255) );
         } else {
             fbo.fill(0,0,0,255);
         }
