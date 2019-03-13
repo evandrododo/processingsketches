@@ -8,7 +8,7 @@ public class KinectControl {
     final int FONTE_SENSOR = 1;
     final int FONTE_VIDEO = 2;
     Kinect kinect;
-    int fonteKinect = FONTE_VIDEO;
+    int fonteKinect = FONTE_SENSOR;
     int anguloKinect = 0;
     Movie videodemo;
     OpenCV opencv;
@@ -43,7 +43,8 @@ public class KinectControl {
         if( fonteKinect == FONTE_VIDEO ) {
             setupVideo(parent);
         }
-    }
+  
+  }
 
     void update() {
         if( fonteKinect == FONTE_SENSOR ) {
@@ -110,19 +111,20 @@ public class KinectControl {
 
     void updateVideoSilhueta() {
         if(tDuracaoBrisa > 0) {
-            fboVideo.blendMode(REPLACE);
+            //fboVideo.blendMode(REPLACE);
             fboVideo.beginDraw();
             fboVideo.tint(255);
             fboVideo.image(kinectDepth,0 ,0);
-            fboVideo.blendMode(ADD);
+            /*fboVideo.blendMode(ADD);
             fboVideo.image(kinectDepth,0 ,0);
             fboVideo.image(kinectDepth,0 ,0);
             fboVideo.image(kinectDepth,0 ,0);
             fboVideo.blendMode(MULTIPLY);
             fboVideo.tint(255);
             fboVideo.image(arterias, 0, 0, fbo.width, fbo.height);
+            */
             fboVideo.endDraw();
-            fboVideo.blendMode(BLEND);
+            //fboVideo.blendMode(BLEND);
         }
     }
 

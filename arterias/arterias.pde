@@ -3,8 +3,8 @@ import g4p_controls.*;
 Controles controles;
 
 
-int brilhoKinect = -130;
-float contrasteKinect = 1.5;
+int brilhoKinect = -135;
+float contrasteKinect = 5.0;
 int anguloTilt = 0;
 int quantidadeMassaPresenca = 1500;
 
@@ -59,8 +59,9 @@ public void setup() {
 
   luzplanta = loadImage("luz.png");
   
-  arterias = new Movie(this, "arterias.mp4");
+//  arterias = new Movie(this, "arterias.mp4");
   corTemporaria = corPrimaria;
+
 }
 
 void startRaizes() {
@@ -70,7 +71,7 @@ void startRaizes() {
 }
 
 void restartBrisa() {
-  arterias.stop();
+  //arterias.stop();
   tInicioBrisa = millis();
   tDuracaoBrisa = 0;
   qtdBrisasPassadas++;
@@ -80,7 +81,7 @@ void restartBrisa() {
   r.restart(int(posInicioRaiz.x), int(posInicioRaiz.y));
   r2.restart(int(posInicioRaiz.x), int(posInicioRaiz.y));
   r3.restart(int(posInicioRaiz.x), int(posInicioRaiz.y));
-  arterias.play();
+  //arterias.play();
 }
 
 public void update() {
