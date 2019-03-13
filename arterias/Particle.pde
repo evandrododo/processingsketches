@@ -40,7 +40,7 @@ public void update() {
       return;
     particulasFrame.strokeWeight(1);
     float iVida = map(tVida, 0, tempoVidaMax*1000, 100, 10);
-    color corP = corPrimaria;
+    color corP = corTemporaria;
     colorMode(HSB, 100);
     particulasFrame.stroke(color(hue(corP), saturation(corP), iVida));
     particulasFrame.point(position.x, position.y);

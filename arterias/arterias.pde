@@ -33,7 +33,7 @@ int tInicioStandby, tDuracaoStandby;
 int qtdBrisasPassadas;
 
 int tDuracaoMaximaBrisa = 193;
-int tDuracaoMinimaStandby = 2;
+int tDuracaoMinimaStandby = 10;
 int tInicioRaizes = 20;
 int tInicioArterias = 40;
 PVector posInicioRaiz = new PVector(500, 100);
@@ -53,7 +53,7 @@ public void setup() {
   
   particulasFrame = createGraphics(width, height, P3D);
   r = new Root(int(posInicioRaiz.x), int(posInicioRaiz.y), 0, 1);
-  r2 = new Root(int(posInicioRaiz.x), int(posInicioRaiz.y), 0, 2);
+  r2 = new Root(int(posInicioRaiz.x-20), int(posInicioRaiz.y), 0, 2);
   r3 = new Root(int(posInicioRaiz.x), int(posInicioRaiz.y), 0, 3);
 
   startStandby();
@@ -94,16 +94,28 @@ public void update() {
     //restartBrisa();
   }
   if( tDuracaoBrisa > tInicioRaizes*1000) {
-    startRaizes();
+    //startRaizes();
+    r.ativaRaiz();
+  }
+  if( tDuracaoBrisa > tInicioRaizes*1000 + 4000) {
+    r2.ativaRaiz();
+  }
+  if( tDuracaoBrisa > tInicioRaizes*1000 + 7000) {
+    r3.ativaRaiz();
   }
 
-
-  if( tDuracaoBrisa > tInicioArterias*1000 ) {
-    corTemporaria = lerpColor( corTemporaria, color(255,0,0), 0.01);
+  if( tDuracaoBrisa < tInicioArterias*1000 + 7000) {
+    if( tDuracaoBrisa > tInicioArterias*1000 ) {
+      corTemporaria = lerpColor( corTemporaria, color(255,0,0), 0.03);
+    }
+    if( tDuracaoBrisa > tInicioArterias*1000 + 1000) {
+      corTemporaria = lerpColor( corTemporaria, color(128*(sin(radians(millis()/5))+1),0,0), 0.1);
+    }
   }
-  if( tDuracaoBrisa > tInicioArterias*1000 + 5000) {
-    corTemporaria = lerpColor( corTemporaria, corPrimaria, 0.01);
+  if( tDuracaoBrisa > tInicioArterias*1000 + 7000) {
+    corTemporaria = lerpColor( corTemporaria, corPrimaria, 0.1);
   }
+  
 
   if( tDuracaoBrisa > tDuracaoMaximaBrisa*1000 - 20000) {
     corTemporaria = lerpColor( corTemporaria, color(0,0,0,0), 0.01);
