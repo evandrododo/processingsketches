@@ -58,7 +58,7 @@ public class KinectControl {
         opencv.contrast(contrasteKinect);
         kinectDepth = opencv.getSnapshot();
 
-        updateVideoSilhueta();
+        // updateVideoSilhueta();
         // Desenha contornos
         updateContornos();
         blendMode(ADD);

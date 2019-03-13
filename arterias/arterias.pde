@@ -35,6 +35,7 @@ int qtdBrisasPassadas;
 int tDuracaoMaximaBrisa = 193;
 int tDuracaoMinimaStandby = 2;
 int tInicioRaizes = 20;
+int tInicioArterias = 40;
 PVector posInicioRaiz = new PVector(500, 100);
 
 PImage luzplanta;
@@ -96,8 +97,19 @@ public void update() {
     startRaizes();
   }
 
+
+  if( tDuracaoBrisa > tInicioArterias*1000 ) {
+    corTemporaria = lerpColor( corTemporaria, color(255,0,0), 0.01);
+  }
+  if( tDuracaoBrisa > tInicioArterias*1000 + 5000) {
+    corTemporaria = lerpColor( corTemporaria, corPrimaria, 0.01);
+  }
+
   if( tDuracaoBrisa > tDuracaoMaximaBrisa*1000 - 20000) {
     corTemporaria = lerpColor( corTemporaria, color(0,0,0,0), 0.01);
+  }
+  if( tDuracaoBrisa > tDuracaoMaximaBrisa*1000 - 1000) {
+    corTemporaria = lerpColor( corTemporaria, color(0,0,0,0), 0.1);
   }
   
 }
