@@ -8,7 +8,7 @@ public class KinectControl {
     final int FONTE_SENSOR = 1;
     final int FONTE_VIDEO = 2;
     Kinect kinect;
-    int fonteKinect = FONTE_SENSOR;
+    int fonteKinect = FONTE_VIDEO;
     int anguloKinect = 0;
     Movie videodemo;
     OpenCV opencv;

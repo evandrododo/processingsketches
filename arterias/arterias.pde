@@ -66,7 +66,7 @@ public void setup() {
   luzplanta = loadImage("luz.png");
   
 //  arterias = new Movie(this, "arterias.mp4");
-  trilha = new SoundFile(this, "trilha.mp3");
+  trilha = new SoundFile(this, "trilha.aiff");
   corTemporaria = corPrimaria;
 
 }
