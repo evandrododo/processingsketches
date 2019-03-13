@@ -194,6 +194,8 @@ public class Root {
       case 2:
         strokeW = 3;
         break;
+      case 3:
+        strokeW = 2;
       default:
         strokeW = 1;
 

@@ -50,6 +50,7 @@ public void settings() {
 }
 
 public void setup() {
+  noCursor();
   tInicioBrisa = millis();
   tInicioRaizes = 20;
   kinectControl = new KinectControl();
@@ -65,7 +66,7 @@ public void setup() {
   luzplanta = loadImage("luz.png");
   
 //  arterias = new Movie(this, "arterias.mp4");
-  trilha = new SoundFile(this, "trilha.wav");
+  trilha = new SoundFile(this, "trilha.mp3");
   corTemporaria = corPrimaria;
 
 }
