@@ -27,7 +27,7 @@ public void update() {
     force.add(randForce);
     position.add(force);
 
-    PVector centroMassa = new PVector(kinectControl.centroMassa.x/640*1440, kinectControl.centroMassa.y/480*1080);
+    PVector centroMassa = new PVector(kinectControl.centroMassa.x/640*1024, kinectControl.centroMassa.y/480*768);
     PVector forcaPresenca = centroMassa;
     forcaPresenca.sub(position);
     //forcaPresenca.div(100);

@@ -81,14 +81,14 @@ public class Root {
     int xNovoPonto = xCriacao + ultimoPonto.x;
     int yNovoPonto = yCriacao + ultimoPonto.y;
     
-    float destinoX = int(kinectControl.centroMassa.x/640 * 1440);
-    float destinoY = int(kinectControl.centroMassa.y/480 * 1080);
+    float destinoX = int(kinectControl.centroMassa.x/640 * 1024);
+    float destinoY = int(kinectControl.centroMassa.y/480 * 768);
     if( profundidade == 0 && iRaiz == 1){
-      destinoX = 1900;
+      destinoX = 1024;
       destinoY = 0;
     }
     if( profundidade == 0 && iRaiz == 2){
-      destinoX = 0;
+      destinoX = -200;
       destinoY = 0;
     }
     if( profundidade == 0 && iRaiz == 3){
@@ -97,15 +97,15 @@ public class Root {
     }
     if( profundidade == 1 ) {
       if( iRaiz == 1){
-        destinoX = 1900;
+        destinoX = 1200;
         destinoY = 900;
       }
       if( iRaiz == 2){
-        destinoX = 0;
+        destinoX = -100;
         destinoY = 900;
       }
       if( iRaiz == 3){
-        destinoY = -100;
+        destinoY = -400;
       }
     } 
 
@@ -162,11 +162,11 @@ public class Root {
       }
       
       int qtdFilhas = filhas.size();
-      int frequenciaFilhas = 10*profundidade;
-      int limiteMinimo = 10;
+      int frequenciaFilhas = 20*profundidade;
+      int limiteMinimo = 30;
       if(profundidade == 0) {
-        frequenciaFilhas = 3;
-        limiteMinimo = 2;
+        frequenciaFilhas = 20;
+        limiteMinimo = 40;
       }
 
       if (qtdNos > limiteMinimo && qtdFilhas < qtdNos/frequenciaFilhas) {    
@@ -183,13 +183,26 @@ public class Root {
     noFill();
     colorMode(RGB, 100);
     beginShape();
-    int strokeW = 9-profundidade*2;
+    int strokeW = 1;
+    switch(profundidade) {
+      case 0:
+        strokeW = 7;
+        break;
+      case 1:
+        strokeW = 5;
+        break;
+      case 2:
+        strokeW = 3;
+        break;
+      default:
+        strokeW = 1;
+
+    }
     strokeWeight(strokeW);
     stroke(1);
     Point p = pontos.get(0);
 
-    stroke(corPrimaria);
-    corTemporaria = corPrimaria;
+    stroke(corTemporaria);
     // Fade in no começo
     if(tDuracaoBrisa < tInicioRaizes*1000 + 6000) {
       int iCorInicio = int(map(tDuracaoBrisa, tInicioRaizes*1000, tInicioRaizes*1000+6000, 0, 100));
@@ -222,7 +235,7 @@ public class Root {
   }
 
   void addFilha() {
-    if (profundidade > 4) return;
+    if (profundidade > 5) return;
     Point ultimoPonto = pontos.get(pontos.size() - 1);
     filhas.add(new Root(ultimoPonto.x, ultimoPonto.y,  profundidade+1, iRaiz));
   }

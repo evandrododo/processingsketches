@@ -8,7 +8,7 @@ public class KinectControl {
     final int FONTE_SENSOR = 1;
     final int FONTE_VIDEO = 2;
     Kinect kinect;
-    int fonteKinect = FONTE_SENSOR;
+    int fonteKinect = FONTE_VIDEO;
     int anguloKinect = 0;
     Movie videodemo;
     OpenCV opencv;
@@ -61,8 +61,8 @@ public class KinectControl {
         // Desenha contornos
         updateContornos();
         blendMode(ADD);
-        image(fbo, (1920-1440)/2, 0, 1440, 1080);
-        image(fboVideo, (1920-1440)/2, 0, 1440, 1080);
+        image(fbo, 0, 0, 1024, 768);
+        image(fboVideo, 0, 0, 1024, 768);
         blendMode(BLEND);
 
         if(debug) {
@@ -139,12 +139,11 @@ public class KinectControl {
             int iFade = int(map(tDuracaoBrisa, tInicioRastroContornos*1000, (tInicioRastroContornos+tDuracaoFadeRastroContornos)*1000, 255, 5));
             if (iFade < 5) iFade = 5;
             fbo.fill(0,0,0,iFade);//fade migué
-
         } else {
             fbo.fill(0,0,0,255);
         }
         fbo.rect(0,0, fbo.width, fbo.height); 
-        fbo.stroke(corPrimaria);
+        fbo.stroke(corTemporaria);
         fbo.strokeWeight(1);
         fbo.noFill();
         for (Contour contour : contornos) {

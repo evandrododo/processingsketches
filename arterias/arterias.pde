@@ -10,9 +10,9 @@ int quantidadeMassaPresenca = 1500;
 
 int distanciaMin = 7;
 int distanciaMax = 8;
-int quantidadeMaxNos = 32;
+int quantidadeMaxNos = 72;
 int anguloVariacao = 80;
-float velocidadeCriacao = 3;
+float velocidadeCriacao = 4;
 
 PGraphics particulasFrame;
   
@@ -33,15 +33,15 @@ int tInicioStandby, tDuracaoStandby;
 int qtdBrisasPassadas;
 
 int tDuracaoMaximaBrisa = 193;
-int tDuracaoMinimaStandby = 5;
+int tDuracaoMinimaStandby = 2;
 int tInicioRaizes = 20;
-PVector posInicioRaiz = new PVector(960, 200);
+PVector posInicioRaiz = new PVector(500, 100);
 
 PImage luzplanta;
 Movie arterias;
 
 public void settings() {
-  fullScreen(P3D);
+  size(1024,768,P3D);
   controles = new Controles();
 }
 
@@ -60,6 +60,7 @@ public void setup() {
   luzplanta = loadImage("luz.png");
   
   arterias = new Movie(this, "arterias.mp4");
+  corTemporaria = corPrimaria;
 }
 
 void startRaizes() {
@@ -93,6 +94,11 @@ public void update() {
   if( tDuracaoBrisa > tInicioRaizes*1000) {
     startRaizes();
   }
+
+  if( tDuracaoBrisa > tDuracaoMaximaBrisa*1000 - 20000) {
+    corTemporaria = lerpColor( corTemporaria, color(0,0,0,0), 0.01);
+  }
+  
 }
 
 public void draw() {
@@ -169,14 +175,15 @@ void fadeOutStandby() {
   if( tInicioFade == 0 ) {
     tInicioFade = millis();
   }
-  iAlphaStandby = int(map(millis(), tInicioFade, tInicioFade+tempoFade*1000, 100, 0));
+  int iAlpha = int(map(millis(), tInicioFade, tInicioFade+tempoFade*1000, 100, 0));
+  if( iAlpha < iAlphaStandby) iAlphaStandby  = iAlpha;
 }
 
 void desenhaLuz() {
   noStroke();
   pushMatrix();
   colorMode(HSB,100);
-  translate(posInicioRaiz.x, posInicioRaiz.y, 0);
+  translate(posInicioRaiz.x - luzplanta.width/2, posInicioRaiz.y - luzplanta.height/3, 0);
   tint(50, 50, 100, iAlphaStandby);
   image(luzplanta, 0, 0);
   colorMode(RGB,255);
@@ -185,9 +192,4 @@ void desenhaLuz() {
 
 void movieEvent(Movie movie) {
   movie.read();  
-}
-
-
-color lerpColor(color cor1, color cor2, int ilerp) {
-  return cor1;
 }

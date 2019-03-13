@@ -16,18 +16,18 @@ public class Controles extends PApplet {
   }
 
   void settings() {
-    size(700, 500, P2D);
+    size(650, 600, P2D);
   }
 
   void setup() {
     background(0);
 
     brilho = new GSlider(this, 75, 20, 200, 100, 15);
-    brilho.setLimits(brilhoKinect, -555, 255);
+    brilho.setLimits(brilhoKinect, -255, 0);
     brilho.setShowValue(true);
 
     contraste = new GSlider(this, 75, 50, 200, 100, 15);
-    contraste.setLimits(contrasteKinect, 0, 100);
+    contraste.setLimits(contrasteKinect, 1, 20);
     contraste.setShowValue(true);
 
     tilt = new GSlider(this, 75, 80, 200, 100, 15);
@@ -46,9 +46,9 @@ public class Controles extends PApplet {
     pgCor.background(corPrimaria);
     pgCor.endDraw();
 
-    posInicioRaizSlider = new GSlider2D(this, 350, 300, 192, 108);
-    posInicioRaizSlider.setLimitsX(posInicioRaiz.x, 0, 1920);
-    posInicioRaizSlider.setLimitsY(posInicioRaiz.y, 0, 1080);
+    posInicioRaizSlider = new GSlider2D(this, 30, 160, 512, 384);
+    posInicioRaizSlider.setLimitsX(posInicioRaiz.x, 0, 1024);
+    posInicioRaizSlider.setLimitsY(posInicioRaiz.y, 0, 768);
     posInicioRaizSlider.setEasing(8);
   }
 
