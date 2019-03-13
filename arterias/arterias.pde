@@ -45,7 +45,7 @@ Movie arterias;
 SoundFile trilha;
 
 public void settings() {
-  fullscreen(P3D);
+  fullScreen(P3D);
   controles = new Controles();
 }
 
