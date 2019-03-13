@@ -45,7 +45,7 @@ Movie arterias;
 SoundFile trilha;
 
 public void settings() {
-  fullscreen(P3D);
+  fullScreen(P3D);
   controles = new Controles();
 }
 
@@ -64,7 +64,7 @@ public void setup() {
 
   luzplanta = loadImage("luz.png");
   
-//  arterias = new Movie(this, "arterias.mp4");
+  arterias = new Movie(this, "arterias.mp4");
   trilha = new SoundFile(this, "trilha.wav");
   corTemporaria = corPrimaria;
 
@@ -77,7 +77,7 @@ void startRaizes() {
 }
 
 void restartBrisa() {
-  //arterias.stop();
+  arterias.stop();
   trilha.stop();
   tInicioBrisa = millis();
   tDuracaoBrisa = 0;
@@ -88,7 +88,7 @@ void restartBrisa() {
   r.restart(int(posInicioRaiz.x), int(posInicioRaiz.y));
   r2.restart(int(posInicioRaiz.x), int(posInicioRaiz.y));
   r3.restart(int(posInicioRaiz.x), int(posInicioRaiz.y));
-  //arterias.play();
+  arterias.play();
   trilha.play();
 }
 
