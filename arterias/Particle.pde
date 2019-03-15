@@ -1,6 +1,6 @@
 
 public class Particle {
-  int tempoVidaMax = 5;
+  int tempoVidaMax = 7;
   PVector position;
   PVector force = new PVector(0,0.1);
 
@@ -44,6 +44,7 @@ public void update() {
     colorMode(HSB, 100);
     particulasFrame.stroke(color(hue(corP), saturation(corP), iVida));
     particulasFrame.point(position.x, position.y);
+    colorMode(RGB, 255);
   }
 
   boolean isDead() {

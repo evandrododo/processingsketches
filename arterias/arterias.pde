@@ -12,11 +12,12 @@ int quantidadeMassaPresenca = 1500;
 
 int distanciaMin = 7;
 int distanciaMax = 8;
-int quantidadeMaxNos = 60;
+int quantidadeMaxNos = 65;
 int anguloVariacao = 80;
 float velocidadeCriacao = 4;
 
 PGraphics particulasFrame;
+PGraphics raizesFrame;
   
 boolean debug = false;
 boolean drawParticulasEnabled = true;
@@ -25,6 +26,9 @@ boolean isStandby = true;
 
 color corPrimaria = color(0,255,255);
 color corTemporaria = color(0,0,0);
+color corSilhueta = color(0,0,0);
+color corParticulas = color(0,0,0);
+color corRaizes = color(0,0,0);
 
 KinectControl kinectControl;
 Root r, r2, r3;
@@ -35,9 +39,9 @@ int tInicioStandby, tDuracaoStandby;
 int qtdBrisasPassadas;
 
 int tDuracaoMaximaBrisa = 193;
-int tDuracaoMinimaStandby = 10;
+int tDuracaoMinimaStandby = 3;
 int tInicioRaizes;
-int tInicioArterias = 40;
+int tInicioArterias = 98;
 PVector posInicioRaiz = new PVector(500, 100);
 
 PImage luzplanta;
@@ -50,6 +54,7 @@ public void settings() {
 }
 
 public void setup() {
+  frameRate(12);
   noCursor();
   tInicioBrisa = millis();
   tInicioRaizes = 20;
@@ -57,6 +62,7 @@ public void setup() {
   kinectControl.setup(this);
   
   particulasFrame = createGraphics(width, height, P3D);
+  raizesFrame = createGraphics(width, height, P3D);
   r = new Root(int(posInicioRaiz.x), int(posInicioRaiz.y), 0, 1);
   r2 = new Root(int(posInicioRaiz.x-20), int(posInicioRaiz.y), 0, 2);
   r3 = new Root(int(posInicioRaiz.x), int(posInicioRaiz.y), 0, 3);
@@ -85,12 +91,23 @@ void restartBrisa() {
   qtdBrisasPassadas++;
   println("Restart pela "+qtdBrisasPassadas+"ª vez");
 
+  corSilhueta = color(0,0,0,0);
+  corParticulas = color(0,0,0,0);
+  corRaizes = color(0,0,0,0);
+  corTemporaria = corPrimaria;
+  kinectControl.fbo = createGraphics(640, 480, P2D); 
   particulasFrame = createGraphics(width, height, P3D);
+  raizesFrame = createGraphics(width, height, P3D);
   r.restart(int(posInicioRaiz.x), int(posInicioRaiz.y));
   r2.restart(int(posInicioRaiz.x), int(posInicioRaiz.y));
   r3.restart(int(posInicioRaiz.x), int(posInicioRaiz.y));
   //arterias.play();
   trilha.play();
+}
+
+public void pulsaPreto() {
+  corSilhueta = lerpColor(corSilhueta, color(0,0,0,0), 0.2);
+  corRaizes = lerpColor(corSilhueta, color(0,0,0,0), 0.2);
 }
 
 public void update() {
@@ -112,24 +129,65 @@ public void update() {
     r3.ativaRaiz();
   }
 
+  if(tDuracaoBrisa > 100 && tDuracaoBrisa < tInicioRaizes*1000 ) {
+    corSilhueta = lerpColor(corSilhueta, corTemporaria, 0.005);
+  } else if (tDuracaoBrisa > tInicioRaizes*1000 && tDuracaoBrisa < tInicioRaizes*1000 + 5000) {
+    corSilhueta = lerpColor(corSilhueta, corTemporaria, 0.1);
+    corRaizes = lerpColor(corRaizes, corTemporaria, 0.01);
+  } else if (tDuracaoBrisa > tInicioRaizes*1000+5000 && tDuracaoBrisa < tInicioRaizes*1000 + 7000) {
+    corRaizes = lerpColor(corRaizes, corTemporaria, 0.1);
+  }
+
+  // Pulsa essas raizes pras minhas veias
   if( tDuracaoBrisa < tInicioArterias*1000 + 7000) {
-    if( tDuracaoBrisa > tInicioArterias*1000 ) {
-      corTemporaria = lerpColor( corTemporaria, color(255,0,0), 0.03);
+    if( tDuracaoBrisa > tInicioArterias*1000 && tDuracaoBrisa < tInicioArterias*1000 + 500) {
+      pulsaPreto();
+      corTemporaria = color(0,0,0);
     }
-    if( tDuracaoBrisa > tInicioArterias*1000 + 1000) {
-      corTemporaria = lerpColor( corTemporaria, color(128*(sin(radians(millis()/5))+1),0,0), 0.1);
+    if( tDuracaoBrisa > tInicioArterias*1000 + 500  && tDuracaoBrisa < tInicioArterias*1000 + 1500 ) {
+      corSilhueta = lerpColor(corSilhueta, color(255,0,0), 0.2);
+      corRaizes = lerpColor(corSilhueta, color(0,255,255), 0.2);
+    }
+    if( tDuracaoBrisa > tInicioArterias*1000 + 1500  && tDuracaoBrisa < tInicioArterias*1000 + 2000 ) {
+      pulsaPreto();
+    }
+    if( tDuracaoBrisa > tInicioArterias*1000 + 2000  && tDuracaoBrisa < tInicioArterias*1000 + 3000 ) {
+      corSilhueta = lerpColor(corSilhueta, color(255,0,0), 0.2);
+      corRaizes = lerpColor(corSilhueta, corPrimaria, 0.2);
+    }
+    if( tDuracaoBrisa > tInicioArterias*1000 + 3000  && tDuracaoBrisa < tInicioArterias*1000 + 3500 ) {
+      pulsaPreto();
+    }
+    if( tDuracaoBrisa > tInicioArterias*1000 + 3500 && tDuracaoBrisa < tInicioArterias*1000 + 4500 ) {
+      corSilhueta = lerpColor( corSilhueta, corPrimaria, 0.4);
+      corRaizes = lerpColor( corRaizes, color(255,0,0), 0.4);
+    }
+    if( tDuracaoBrisa > tInicioArterias*1000 + 4500 && tDuracaoBrisa < tInicioArterias*1000 + 5000 ) {
+      pulsaPreto();
+    }
+    if( tDuracaoBrisa > tInicioArterias*1000 + 5500 && tDuracaoBrisa < tInicioArterias*1000 + 7000 ) {
+      corSilhueta = lerpColor( corSilhueta, color(255,0,0), 0.4);
+      corRaizes = lerpColor( corRaizes, color(255,0,0), 0.4);
     }
   }
-  if( tDuracaoBrisa > tInicioArterias*1000 + 7000) {
-    corTemporaria = lerpColor( corTemporaria, corPrimaria, 0.1);
+  if( tDuracaoBrisa > tInicioArterias*1000 + 7000 && tDuracaoBrisa < tInicioArterias*1000 + 8000 ) {
+    corSilhueta = lerpColor( corSilhueta, corPrimaria, 0.4);
+    corRaizes = lerpColor( corRaizes, corPrimaria, 0.4);
+    corTemporaria = corPrimaria;
   }
   
 
+  // Fim da brisa com fade out
   if( tDuracaoBrisa > tDuracaoMaximaBrisa*1000 - 20000) {
-    corTemporaria = lerpColor( corTemporaria, color(0,0,0,0), 0.01);
-  }
-  if( tDuracaoBrisa > tDuracaoMaximaBrisa*1000 - 1000) {
     corTemporaria = lerpColor( corTemporaria, color(0,0,0,0), 0.1);
+    println("CorTemporaria:"+corTemporaria);
+    corRaizes = corTemporaria;
+    corSilhueta = corTemporaria;
+  }
+  if( tDuracaoBrisa > tDuracaoMaximaBrisa*1000 - 2000) {
+    corTemporaria = lerpColor( corTemporaria, color(0,0,0,0), 0.5);
+    corRaizes = corTemporaria;
+    corSilhueta = corTemporaria;
   }
   
 }
@@ -165,7 +223,13 @@ public void draw() {
 
     blendMode(ADD);
     image(particulasFrame, 0, 0);
+    tint(corRaizes);
+    image(raizesFrame, 0, 0);
+    noTint();
     blendMode(BLEND);
+  }
+  if (debug) {
+    text("tDuracao:"+tDuracaoBrisa,width-190, 80);
   }
 }
 
@@ -176,7 +240,7 @@ void startStandby() {
   tDuracaoStandby = 0;
   tDuracaoBrisa = 0;
   tInicioFade = 0;
-  iAlphaStandby = 100;
+  iAlphaStandby = 0;
 }
 
 int tempoFade = 2;
