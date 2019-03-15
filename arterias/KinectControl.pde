@@ -111,20 +111,23 @@ public class KinectControl {
 
     void updateVideoSilhueta() {
         if(tDuracaoBrisa > 0) {
-            //fboVideo.blendMode(REPLACE);
+            fboVideo.blendMode(REPLACE);
             fboVideo.beginDraw();
             fboVideo.tint(255);
             fboVideo.image(kinectDepth,0 ,0);
-            /*fboVideo.blendMode(ADD);
+            fboVideo.blendMode(ADD);
             fboVideo.image(kinectDepth,0 ,0);
             fboVideo.image(kinectDepth,0 ,0);
             fboVideo.image(kinectDepth,0 ,0);
             fboVideo.blendMode(MULTIPLY);
             fboVideo.tint(255);
+            if (arterias.available()) {
+                arterias.read();
+            }
             fboVideo.image(arterias, 0, 0, fbo.width, fbo.height);
-            */
+            
             fboVideo.endDraw();
-            //fboVideo.blendMode(BLEND);
+            fboVideo.blendMode(BLEND);
         }
     }
 

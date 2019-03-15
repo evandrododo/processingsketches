@@ -1,7 +1,8 @@
 import g4p_controls.*;
 
 import processing.sound.*;
- 
+import gohai.glvideo.*;
+
 Controles controles;
 
 
@@ -45,7 +46,7 @@ int tInicioArterias = 98;
 PVector posInicioRaiz = new PVector(500, 100);
 
 PImage luzplanta;
-Movie arterias;
+GLMovie arterias;
 SoundFile trilha;
 
 public void settings() {
@@ -71,7 +72,7 @@ public void setup() {
 
   luzplanta = loadImage("luz.png");
   
-//  arterias = new Movie(this, "arterias.mp4");
+  arterias = new GLMovie(this, "arterias.mp4");
   trilha = new SoundFile(this, "trilha.aiff");
   corTemporaria = corPrimaria;
 
@@ -101,7 +102,7 @@ void restartBrisa() {
   r.restart(int(posInicioRaiz.x), int(posInicioRaiz.y));
   r2.restart(int(posInicioRaiz.x), int(posInicioRaiz.y));
   r3.restart(int(posInicioRaiz.x), int(posInicioRaiz.y));
-  //arterias.play();
+  arterias.play();
   trilha.play();
 }
 
