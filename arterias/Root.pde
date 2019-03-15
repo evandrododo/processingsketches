@@ -228,7 +228,7 @@ public class Root {
     if(ativo) {
       this.update();
       this.drawFilhas();
-      this.drawParticulas();
+      //this.drawParticulas();
       if( pontos.size() < quantidadeMaxNos+profundidade*2 ) {
         this.drawLigacoes();
       }

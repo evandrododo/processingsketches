@@ -58,7 +58,7 @@ public class KinectControl {
         opencv.contrast(contrasteKinect);
         kinectDepth = opencv.getSnapshot();
 
-        // updateVideoSilhueta();
+        updateVideoSilhueta();
         // Desenha contornos
         updateContornos();
         blendMode(ADD);
@@ -121,10 +121,8 @@ public class KinectControl {
             fboVideo.image(kinectDepth,0 ,0);
             fboVideo.blendMode(MULTIPLY);
             fboVideo.tint(255);
-            if (arterias.available()) {
-                arterias.read();
-            }
-            fboVideo.image(arterias, 0, 0, fbo.width, fbo.height);
+            
+            fboVideo.image(arterias, 0, 0, 1024, 768);
             
             fboVideo.endDraw();
             fboVideo.blendMode(BLEND);
@@ -176,8 +174,7 @@ public class KinectControl {
   void trackKinect() {
     // Raw location
     PVector loc = new PVector(width/2, height/2);
-    PVector centroPonderado = new PVector(width/2, height/2);
-
+    
     kinectDepth.loadPixels();
     // Get the raw depth as array of integers
     depth = kinectDepth.pixels;
