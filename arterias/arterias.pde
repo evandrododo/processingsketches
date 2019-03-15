@@ -73,7 +73,7 @@ public void setup() {
   luzplanta = loadImage("luz.png");
   
   arterias = new GLMovie(this, "arterias.mp4");
-  trilha = new SoundFile(this, "trilha.aiff");
+ // trilha = new SoundFile(this, "trilha.aiff");
   corTemporaria = corPrimaria;
 
 }
@@ -85,8 +85,9 @@ void startRaizes() {
 }
 
 void restartBrisa() {
-  //arterias.stop();
-  trilha.stop();
+  arterias.close();
+  arterias = new GLMovie(this, "arterias.mp4");
+  //trilha.stop();
   tInicioBrisa = millis();
   tDuracaoBrisa = 0;
   qtdBrisasPassadas++;
@@ -103,7 +104,7 @@ void restartBrisa() {
   r2.restart(int(posInicioRaiz.x), int(posInicioRaiz.y));
   r3.restart(int(posInicioRaiz.x), int(posInicioRaiz.y));
   arterias.play();
-  trilha.play();
+  //trilha.play();
 }
 
 public void pulsaPreto() {
@@ -145,24 +146,11 @@ public void update() {
       pulsaPreto();
       corTemporaria = color(0,0,0);
     }
-    if( tDuracaoBrisa > tInicioArterias*1000 + 500  && tDuracaoBrisa < tInicioArterias*1000 + 1500 ) {
-      corSilhueta = lerpColor(corSilhueta, color(255,0,0), 0.4);
-      corRaizes = lerpColor(corSilhueta, color(0,255,255), 0.4);
-    }
-    if( tDuracaoBrisa > tInicioArterias*1000 + 1500  && tDuracaoBrisa < tInicioArterias*1000 + 2000 ) {
-      pulsaPreto();
-    }
-    if( tDuracaoBrisa > tInicioArterias*1000 + 2000  && tDuracaoBrisa < tInicioArterias*1000 + 3000 ) {
+    if( tDuracaoBrisa > tInicioArterias*1000 + 500  && tDuracaoBrisa < tInicioArterias*1000 + 3000 ) {
       corSilhueta = lerpColor(corSilhueta, color(255,0,0), 0.4);
       corRaizes = lerpColor(corSilhueta, color(255,0,0), 0.4);
     }
-    if( tDuracaoBrisa > tInicioArterias*1000 + 3000  && tDuracaoBrisa < tInicioArterias*1000 + 3500 ) {
-      pulsaPreto();
-    }
-    if( tDuracaoBrisa > tInicioArterias*1000 + 3500 && tDuracaoBrisa < tInicioArterias*1000 + 4500 ) {
-      corSilhueta = lerpColor( corSilhueta, color(255,0,0), 0.4);
-      corRaizes = lerpColor( corRaizes, color(255,0,0), 0.4);
-    }
+  
     if( tDuracaoBrisa > tInicioArterias*1000 + 4500 && tDuracaoBrisa < tInicioArterias*1000 + 5000 ) {
       pulsaPreto();
     }
@@ -216,19 +204,23 @@ public void draw() {
   r3.drawRaiz();
 
   if(drawParticulasEnabled) {
-    particulasFrame.beginDraw();
+  /*  particulasFrame.beginDraw();
     particulasFrame.fill(0, 0, 0, (sin(radians(millis()/100))+1)*10 );
     particulasFrame.noStroke();
     particulasFrame.rect(0,0, width, height);
     particulasFrame.endDraw();
-
+*/
     blendMode(ADD);
-    image(particulasFrame, 0, 0);
+  //  image(particulasFrame, 0, 0);
     tint(corRaizes);
     image(raizesFrame, 0, 0);
     noTint();
     blendMode(BLEND);
   }
+  if (arterias.available()) {
+    arterias.read();
+  }
+            
   if (debug) {
     text("tDuracao:"+tDuracaoBrisa,width-190, 80);
   }
