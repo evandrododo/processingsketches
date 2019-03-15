@@ -12,7 +12,7 @@ int quantidadeMassaPresenca = 1500;
 
 int distanciaMin = 7;
 int distanciaMax = 8;
-int quantidadeMaxNos = 65;
+int quantidadeMaxNos = 75;
 int anguloVariacao = 80;
 float velocidadeCriacao = 4;
 
@@ -89,7 +89,7 @@ void restartBrisa() {
   tInicioBrisa = millis();
   tDuracaoBrisa = 0;
   qtdBrisasPassadas++;
-  println("Restart pela "+qtdBrisasPassadas+"ª vez");
+  // println("Restart pela "+qtdBrisasPassadas+"ª vez");
 
   corSilhueta = color(0,0,0,0);
   corParticulas = color(0,0,0,0);
@@ -145,21 +145,21 @@ public void update() {
       corTemporaria = color(0,0,0);
     }
     if( tDuracaoBrisa > tInicioArterias*1000 + 500  && tDuracaoBrisa < tInicioArterias*1000 + 1500 ) {
-      corSilhueta = lerpColor(corSilhueta, color(255,0,0), 0.2);
-      corRaizes = lerpColor(corSilhueta, color(0,255,255), 0.2);
+      corSilhueta = lerpColor(corSilhueta, color(255,0,0), 0.4);
+      corRaizes = lerpColor(corSilhueta, color(0,255,255), 0.4);
     }
     if( tDuracaoBrisa > tInicioArterias*1000 + 1500  && tDuracaoBrisa < tInicioArterias*1000 + 2000 ) {
       pulsaPreto();
     }
     if( tDuracaoBrisa > tInicioArterias*1000 + 2000  && tDuracaoBrisa < tInicioArterias*1000 + 3000 ) {
-      corSilhueta = lerpColor(corSilhueta, color(255,0,0), 0.2);
-      corRaizes = lerpColor(corSilhueta, corPrimaria, 0.2);
+      corSilhueta = lerpColor(corSilhueta, color(255,0,0), 0.4);
+      corRaizes = lerpColor(corSilhueta, color(255,0,0), 0.4);
     }
     if( tDuracaoBrisa > tInicioArterias*1000 + 3000  && tDuracaoBrisa < tInicioArterias*1000 + 3500 ) {
       pulsaPreto();
     }
     if( tDuracaoBrisa > tInicioArterias*1000 + 3500 && tDuracaoBrisa < tInicioArterias*1000 + 4500 ) {
-      corSilhueta = lerpColor( corSilhueta, corPrimaria, 0.4);
+      corSilhueta = lerpColor( corSilhueta, color(255,0,0), 0.4);
       corRaizes = lerpColor( corRaizes, color(255,0,0), 0.4);
     }
     if( tDuracaoBrisa > tInicioArterias*1000 + 4500 && tDuracaoBrisa < tInicioArterias*1000 + 5000 ) {
@@ -180,7 +180,7 @@ public void update() {
   // Fim da brisa com fade out
   if( tDuracaoBrisa > tDuracaoMaximaBrisa*1000 - 20000) {
     corTemporaria = lerpColor( corTemporaria, color(0,0,0,0), 0.1);
-    println("CorTemporaria:"+corTemporaria);
+    // println("CorTemporaria:"+corTemporaria);
     corRaizes = corTemporaria;
     corSilhueta = corTemporaria;
   }
@@ -234,7 +234,7 @@ public void draw() {
 }
 
 void startStandby() {
-  println("Inicio standby");
+  // println("Inicio standby");
   isStandby = true;
   tInicioStandby = millis();
   tDuracaoStandby = 0;

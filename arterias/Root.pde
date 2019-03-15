@@ -18,7 +18,7 @@ public class Root {
     if(profundidade > 0) {
       ativaRaiz();
     }
-    println("Raiz add em ["+xI+","+yI+"] P:"+profundidade);
+    // println("Raiz add em ["+xI+","+yI+"] P:"+profundidade);
   }
 
   public void restart(int xI, int yI) {
@@ -157,7 +157,7 @@ public class Root {
     if(ativo) {
       int qtdNos = pontos.size();
 
-      if (qtdNos < quantidadeMaxNos &&  
+      if (qtdNos < quantidadeMaxNos+profundidade*2 &&  
           qtdNos < segundosDecorridos() * velocidadeCriacao ) {
         addPonto();
       }
@@ -168,6 +168,12 @@ public class Root {
       if(profundidade == 0) {
         frequenciaFilhas = 20;
         limiteMinimo = 40;
+      }
+      if(profundidade > 3) {
+        frequenciaFilhas = 15*profundidade;
+      }
+      if(profundidade > 5) {
+        frequenciaFilhas = 10*profundidade;
       }
 
       if (qtdNos > limiteMinimo && qtdFilhas < qtdNos/frequenciaFilhas) {    
@@ -223,7 +229,7 @@ public class Root {
       this.update();
       this.drawFilhas();
       this.drawParticulas();
-      if( pontos.size() < quantidadeMaxNos-1 ) {
+      if( pontos.size() < quantidadeMaxNos+profundidade*2 ) {
         this.drawLigacoes();
       }
       if(debug) {
