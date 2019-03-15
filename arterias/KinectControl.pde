@@ -8,7 +8,7 @@ public class KinectControl {
     final int FONTE_SENSOR = 1;
     final int FONTE_VIDEO = 2;
     Kinect kinect;
-    int fonteKinect = FONTE_VIDEO;
+    int fonteKinect = FONTE_SENSOR;
     int anguloKinect = 0;
     Movie videodemo;
     OpenCV opencv;
@@ -141,13 +141,13 @@ public class KinectControl {
             int iFade = int(map(tDuracaoBrisa, tInicioRastroContornos*1000, (tInicioRastroContornos+tDuracaoFadeRastroContornos)*1000, 255, 5));
             if (iFade < 5) iFade = 5;
             fbo.fill(0,0,0,iFade);//fade migué
-        } else if (tDuracaoBrisa < tInicioRaizes*1000 + 10000) {
-            fbo.fill(0,0,0, map(tDuracaoBrisa, 0, tInicioRaizes*1000+10000, 0, 255) );
+        } else if (tDuracaoBrisa < tInicioRaizes*1000 + 20000) {
+            fbo.fill(0,0,0, map(tDuracaoBrisa, 0, tInicioRaizes*1000+20000, 0, 50) );
         } else {
-            fbo.fill(0,0,0,255);
+            fbo.fill(0,0,0,50);
         }
         fbo.rect(0,0, fbo.width, fbo.height); 
-        fbo.stroke(corTemporaria);
+        fbo.stroke(corSilhueta);
         fbo.strokeWeight(1);
         fbo.noFill();
         for (Contour contour : contornos) {
@@ -221,7 +221,7 @@ public class KinectControl {
         rect(width-200, 20, 190,80);
         fill(155,255,255);
         text("frameRate: "+frameRate,width-190, 40);
-        text("presença temporaria:"+tempoPresencaTemporaria,width-190, 80);
+        text("presença temporaria:"+tempoPresencaTemporaria,width-190, 60);
     }
 
     // Interpolating the location, doing it arbitrarily for now

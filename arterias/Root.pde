@@ -18,7 +18,7 @@ public class Root {
     if(profundidade > 0) {
       ativaRaiz();
     }
-    println("Raiz add em ["+xI+","+yI+"] P:"+profundidade);
+    // println("Raiz add em ["+xI+","+yI+"] P:"+profundidade);
   }
 
   public void restart(int xI, int yI) {
@@ -118,6 +118,7 @@ public class Root {
       forcaAtracao.div(distanciaDestino);
       forcaAtracao.mult(sqrt(sqrt(distanciaDestino)));
     }
+    if(forcaAtracao.mag() > 20) forcaAtracao.setMag(20);
 
     xNovoPonto += forcaAtracao.x;
     yNovoPonto += forcaAtracao.y;
@@ -156,7 +157,7 @@ public class Root {
     if(ativo) {
       int qtdNos = pontos.size();
 
-      if (qtdNos < quantidadeMaxNos &&  
+      if (qtdNos < quantidadeMaxNos+profundidade*2 &&  
           qtdNos < segundosDecorridos() * velocidadeCriacao ) {
         addPonto();
       }
@@ -167,6 +168,12 @@ public class Root {
       if(profundidade == 0) {
         frequenciaFilhas = 20;
         limiteMinimo = 40;
+      }
+      if(profundidade > 3) {
+        frequenciaFilhas = 15*profundidade;
+      }
+      if(profundidade > 5) {
+        frequenciaFilhas = 10*profundidade;
       }
 
       if (qtdNos > limiteMinimo && qtdFilhas < qtdNos/frequenciaFilhas) {    
@@ -180,9 +187,10 @@ public class Root {
   }
 
   void drawLigacoes() {
-    noFill();
-    colorMode(RGB, 100);
-    beginShape();
+    raizesFrame.smooth(8);
+    raizesFrame.beginDraw();
+    raizesFrame.noFill();
+    raizesFrame.beginShape();
     int strokeW = 1;
     switch(profundidade) {
       case 0:
@@ -194,32 +202,26 @@ public class Root {
       case 2:
         strokeW = 3;
         break;
+      case 3:
+        strokeW = 2;
       default:
         strokeW = 1;
 
     }
-    strokeWeight(strokeW);
-    stroke(1);
+    raizesFrame.strokeWeight(strokeW);
     Point p = pontos.get(0);
 
-    stroke(corTemporaria);
-    // Fade in no começo
-    if(tDuracaoBrisa < tInicioRaizes*1000 + 6000) {
-      int iCorInicio = int(map(tDuracaoBrisa, tInicioRaizes*1000, tInicioRaizes*1000+6000, 0, 100));
-      colorMode(HSB, 100);
-      corTemporaria = color(hue(corPrimaria), saturation(corPrimaria), iCorInicio);
-      stroke(corTemporaria);
-      colorMode(HSB, 100);
-    }
-    vertex(p.x, p.y, 0);
+    // raizesFrame.stroke(corRaizes);
+    raizesFrame.stroke(255,255,255);
+    raizesFrame.vertex(p.x, p.y, 0);
     for (int i = 0; i < pontos.size()-1; i++) {
       p = pontos.get(i);
-      curveVertex(p.x, p.y, 0);
+      raizesFrame.curveVertex(p.x, p.y, 0);
     }
-    curveVertex(p.x, p.y, 0);
+    raizesFrame.curveVertex(p.x, p.y, 0);
 
-    endShape();
-    colorMode(RGB, 255);
+    raizesFrame.endShape();
+    raizesFrame.endDraw();
   }
 
   void drawRaiz() { 
@@ -227,7 +229,9 @@ public class Root {
       this.update();
       this.drawFilhas();
       this.drawParticulas();
-      this.drawLigacoes();
+      if( pontos.size() < quantidadeMaxNos+profundidade*2 ) {
+        this.drawLigacoes();
+      }
       if(debug) {
         this.drawPontos();
       }
@@ -235,7 +239,7 @@ public class Root {
   }
 
   void addFilha() {
-    if (profundidade > 5) return;
+    if (profundidade > 7) return;
     Point ultimoPonto = pontos.get(pontos.size() - 1);
     filhas.add(new Root(ultimoPonto.x, ultimoPonto.y,  profundidade+1, iRaiz));
   }
